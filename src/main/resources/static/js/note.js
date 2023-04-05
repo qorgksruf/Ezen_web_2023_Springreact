@@ -56,6 +56,23 @@ function onget(){
 }
 
 
+/*function ondelete(nno){
+    console.log(nno);
+    $.ajax({
+        url:"/note/delete",
+        method:"delete",
+        data: {"nno":nno},
+        success:(r)=>{
+            console.log(r);
+            if(r==true){
+                alert("삭제성공")
+                onget();
+            }else{
+                alert("삭제실패")
+            }
+        }
+    });
+}*/
 function ondelete(nno){
     console.log(nno);
     $.ajax({
@@ -73,6 +90,7 @@ function ondelete(nno){
         }
     });
 }
+
 
 function onupdate(nno){
     let ncontents = prompt("수정할내용");
