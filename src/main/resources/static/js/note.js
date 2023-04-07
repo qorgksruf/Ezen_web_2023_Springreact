@@ -92,6 +92,7 @@ function ondelete(nno){
 }
 
 
+
 function onupdate(nno){
     let ncontents = prompt("수정할내용");
     console.log(ncontents);
