@@ -3,9 +3,11 @@ package ezenweb.example.day02;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@public class SpringStart {
+
+@SpringBootApplication
+public class SpringStart {
     public static void main(String[] args) {
-        SpringApplication.run( SpringStart.class );
+        SpringApplication.run(SpringStart.class );
     }
 }
 // 클래스명 첫글자는 꼭 대문자!!
