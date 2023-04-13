@@ -2,16 +2,25 @@ package ezenweb.web.config;
 
 
 import ezenweb.web.service.MemberService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration  //스프링 빈에 등록 [MVC 컴포넌트]
+@Slf4j
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
+
+
+
     //인증[로그인]관련 보안 담당 메소드
     @Autowired
     private MemberService memberService;
@@ -44,6 +53,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                         .csrf() //사이트 간 요청위조[post,put사용 불가능]
                                 .ignoringAntMatchers("/member/info")//특정 매핑 url csrf 무시
                                  .ignoringAntMatchers("/member/login")
+                                 .ignoringAntMatchers("/member/findid")
+                                   .ignoringAntMatchers("/member/findpassword")
+                                  .ignoringAntMatchers("/member/byeuser")
+                                 .ignoringAntMatchers("/member/bye")
                 .and() //기능 추가할때 사용되는 메소드
                         .formLogin()//
                         .loginPage("/member/login")//로그인 으로 사용될 페이지의 매핑 URL
@@ -55,8 +68,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 
                         .and()
                             .logout()
-                            .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
-                            .logoutSuccessUrl("/")//로그아웃 성공시 이동 매핑  ㅕ기
-                            .invalidateHttpSession(true); //세션 초기화
+                                .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
+                                .logoutSuccessUrl("/")//로그아웃 성공시 이동 매핑  ㅕ기
+                                .invalidateHttpSession(true) //세션 초기화
+                .and()
+                     .oauth2Login()//소셜 로그인 설정
+                    .defaultSuccessUrl("/")//로그인 성공시 이동할 매핑 url
+                    .userInfoEndpoint()//스프링 시큐리티로 들어올 수 있도록 시큐리티 로그인 엔드포인트[종착]
+                    .userService(memberService);
     }
+
+
 }

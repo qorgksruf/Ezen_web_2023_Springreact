@@ -25,7 +25,7 @@ public class MemberController {
 
 
     //@Autowired없을때 객체[빈]생성
-   // MemberService memberService = new MemberService();
+    //MemberService memberService = new MemberService();
 
 
     //@Autowired있을떄 객체[빈]자동생성
@@ -56,12 +56,12 @@ public class MemberController {
         return result;
     }
     //회원정보 탈퇴
-    @DeleteMapping("/info")
+/*    @DeleteMapping("/info")
     public boolean delete(@RequestParam int mno){
         log.info("member info delete"+mno);
         boolean result = memberService.delete(mno);
         return result;
-    }
+    }*/
 
     //--------------스프링 시큐리티 사용하기 전---------------------//
 /*    @PostMapping("/login")
@@ -74,5 +74,48 @@ public class MemberController {
     @GetMapping("/logout")public boolean logout(){
         return memberService.logout();
     }*/
+
+
+    //회원아이디찾기[과제]
+    @PostMapping("/findid")
+    public String findid(@RequestBody MemberDto memberDto){
+
+        String result=memberService.findid(memberDto);
+        return result;
+    }
+
+    @GetMapping("/findid")
+    public Resource getfindid(){
+        return new ClassPathResource("templates/member/findid.html");
+    }
+
+
+    //회원비밀번호찾기
+    @PostMapping("/findpassword")
+    public int findpassword(@RequestBody MemberDto memberDto){
+        int result=memberService.findpassword(memberDto);
+        return result;
+    }
+
+    @GetMapping("/findpassword")
+    public Resource getfindpassword(){
+        return new ClassPathResource("templates/member/findpassword.html");
+    }
+
+    @GetMapping("/byeuser")
+    public Resource getbyeuser(){
+        return new ClassPathResource("templates/member/byeuser.html");
+    }
+
+    //회원정보 탈퇴 과제
+    @DeleteMapping("/bye")
+    public boolean delete(@RequestParam int mno, @RequestParam String mpassword ){
+        log.info("member bye delete int mno"+mno);
+        log.info("member bye delete String password"+mpassword);
+
+        boolean result = memberService.delete(mno,mpassword);
+        //return result;
+        return true;
+    }
 
 }

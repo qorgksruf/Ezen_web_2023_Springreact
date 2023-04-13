@@ -3,9 +3,11 @@ package ezenweb.web.domain.member;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 @Getter@Setter@ToString
@@ -13,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 //시큐리티[UserDetails]+일반DTO
-public class MemberDto implements UserDetails {
+public class MemberDto implements UserDetails, OAuth2User {
 
 
     private int mno;     //회원번호
@@ -28,7 +30,7 @@ public class MemberDto implements UserDetails {
 
     private String mrole;   //회원등급
     private Set<GrantedAuthority> 권한목록;
-
+    private Map<String,Object> 소셜회원정보;
     //추가
     private LocalDateTime cdate;
 
@@ -46,9 +48,8 @@ public class MemberDto implements UserDetails {
     }
 
 
-    @Override//인증된 권환반환
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
         return this.권한목록;
     }
 
@@ -81,5 +82,20 @@ public class MemberDto implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
+
+
+    //------------Oauth2user오버라이드-----------------
+    @Override
+    public String getName() {
+        return this.memail;
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return this.소셜회원정보;
+    }
+
 
 }

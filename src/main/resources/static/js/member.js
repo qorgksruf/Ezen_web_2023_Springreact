@@ -1,4 +1,5 @@
 console.log("signip js열림");
+let memberInfo='';
 //회원가입
 function onSignup() {
     console.log("확인확인");
@@ -61,14 +62,21 @@ function getMember(){
             url:"/member/info",
             method:"get",
             contentType:"application/json",
+            async:false,
             success:(r)=>{
             console.log("테스트");
             console.log(r);
+            memberInfo=r;
                 document.querySelector('.infobox').innerHTML=`${r.mname}님`
-                document.querySelector('.infobox').innerHTML+=`<button onclick="getLogout()" type="button">로그아웃</button>`
+                document.querySelector('.infobox').innerHTML+=
+                            `<a href="/member/logout"><button type="button"> 로그아웃 </button></a>
+                            <button onclick="getDelete()" type="button"> 회원탈퇴 </button>`
             }
        })
 }
+console.log("memberInfo확인");
+console.log(memberInfo.mno)
+/*
 //로그아웃
 function getLogout(){
     console.log("로구아웃")
@@ -84,30 +92,75 @@ function getLogout(){
 
      })
 }
+*/
 
-/*
+
 //아이디찾기
 function findId() {
     console.log("아이디찾기확인");
 
    let info={
-    mname:document.querySelector(".mname").value,
-    mphone:document.querySelector(".mphone").value,
+    mname:document.querySelector('.mname').value,
+    mphone:document.querySelector('.mphone').value
    }
 
     $.ajax({
-        url:"/member/info",
-        method:"get",
+        url:"/member/findid",
+        method:"post",
         data:JSON.stringify(info),
         contentType:"application/json",
         success:(r)=>{
              console.log(r);
-                  if(r==true){
-                      alert("통신완료");
-                  }else{
-                  alert("통신실패");
-               }
+            document.querySelector('.find').innerHTML=`${r}`
         }
     })
 
-}*/
+}
+
+
+//비밀번호찾기
+function findpassword() {
+    console.log("비밀번호찾기확인");
+
+   let info={
+    memail:document.querySelector('.memail').value,
+    mphone:document.querySelector('.mphone').value
+   }
+
+    $.ajax({
+        url:"/member/findpassword",
+        method:"post",
+        data:JSON.stringify(info),
+        contentType:"application/json",
+        success:(r)=>{
+             console.log(r);
+            document.querySelector('.findpasswordy').innerHTML=`${r}`
+        }
+    })
+
+}
+
+
+//회원탈퇴
+function bye() {
+    console.log("회원탈퇴하기버튼 클릭");
+
+    let mpassword=document.querySelector('.mpassword').value;
+    let mno=memberInfo.mno;
+
+    console.log("password확인"+mpassword);
+    $.ajax({
+        url:"/member/bye",
+        method:"delete",
+        data:{mpassword:mpassword,mno:mno},
+        success:(r)=>{
+             console.log(r);
+             if(r==true){
+                alert("회원탈퇴되셨습니다")
+             }else{
+                alert("탈퇴가되지않았습니다")
+             }
+        }
+    })
+
+}

@@ -24,11 +24,20 @@ public interface MemberEntityRepository extends JpaRepository<MemberEntity, Inte
    //아이디찾기[이름과 전화번호]
     Optional<MemberEntity>findByMnameAndMphone(String mname, String mphone);
    //비밀번호찾기[아이디와 전화버호]
-    boolean existsByMemailAndMphone(String memail, String mphone);
+    //boolean existsByMemailAndMphone(String memail, String mphone);
 
 /*    //query 예시
     @Query("select * from MemberEntity m where m.memail=?1")
     MemberEntity 아이디로엔티티찾기(String memail);*/
+    Optional<MemberEntity>findByMemailAndMphone(String memail, String mphone);
+    //비밀번호찾기[아이디와 전화버호]
+    boolean existsByMemailAndMphone(String memail, String mphone);
+
+    //Optional<MemberEntity> findBypassword(int memail);
+
+
+
+
 }
 
 

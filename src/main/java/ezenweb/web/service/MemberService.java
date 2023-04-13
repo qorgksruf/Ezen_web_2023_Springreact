@@ -11,8 +11,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +27,55 @@ import java.util.*;
 
 @Slf4j
 @Service //서비스 레이어
-public class MemberService implements UserDetailsService {
+public class MemberService implements UserDetailsService, OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+    @Override// 토큰 결과[JSON]{필드명:값,필드명:값}
+    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
+
+        OAuth2UserService oAuth2UserService = new DefaultOAuth2UserService();
+            log.info("서비스정보::"+oAuth2UserService.loadUser(userRequest));
+
+        OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
+            log.info("회원정보::"+oAuth2User.getAuthorities());
+
+         String registration = userRequest.getClientRegistration().getRegistrationId();
+         log.info("클라이언트아이디"+registration);
+
+         MemberDto memberDto = new MemberDto();
+
+         String oauth2UserInfo = userRequest
+                                        .getClientRegistration()
+                                            .getProviderDetails()
+                                                 .getUserInfoEndpoint()
+                                                     .getUserNameAttributeName();
+
+                    log.info("oauth2UserInfo::"+oauth2UserInfo);
+          //구글의 이메일 호출
+           String email=(String)oAuth2User.getAttributes().get("email");
+                //log.info("google name:"+registrationId);
+            //구글의 이름 호출
+           String name=(String)oAuth2User.getAttributes().get("name");
+                //log.info("google email:"+registrationId);
+            memberDto.setMemail(email);
+            memberDto.setMname(name);
+                Set<GrantedAuthority> 권한목록 = new HashSet<>();
+                SimpleGrantedAuthority 권한 = new SimpleGrantedAuthority("ROLE_oauthuser");
+                권한목록.add(권한);
+                memberDto.set권한목록(권한목록);
+
+                //1.db에 저장하기전에 해당 이메일로 된 이메일 존재하는 지 검사
+                MemberEntity entity= memberEntityRepository.findByMemail(email);
+                if(entity==null){//첫방문
+                    //DB 처리[oauth2회원을 db에 회원가입 근데 첫 방문시에만 db처리해야함]
+                    memberDto.setMrole("oauthuser");//db에 저장할 권한명
+                    memberEntityRepository.save(memberDto.toEntity());
+                }else{//두번쨰 방문 이상 수정 처리
+                    entity.setMname(name);
+                }
+
+
+                 return memberDto;
+    }
 
     @Autowired
     private MemberEntityRepository memberEntityRepository;
@@ -116,13 +167,18 @@ public class MemberService implements UserDetailsService {
         }
         return false;
     }
-    //회원탈퇴
+   //회원탈퇴
     @Transactional
-    public boolean delete( int mno){
+    public boolean delete( int mno,String mpassword){
         Optional<MemberEntity>entityOptional=
                 memberEntityRepository.findById(mno);
         if(entityOptional.isPresent()){
-            memberEntityRepository.delete(entityOptional.get());
+            MemberEntity entity= entityOptional.get();
+            if(new BCryptPasswordEncoder().matches( mpassword, entity.getMpassword() ) ){
+                memberEntityRepository.delete(entity);
+                return true;
+            }
+
         }
         return false;
     }
@@ -171,6 +227,40 @@ public class MemberService implements UserDetailsService {
        }
        return (MemberDto)o;
     }
+
+    //회원아이디찾기 [과제]
+    @Transactional
+    public String findid( MemberDto memberDto){
+        Optional<MemberEntity> Optionalentity= memberEntityRepository.findByMnameAndMphone(memberDto.getMname(),memberDto.getMphone());
+        if(Optionalentity.isPresent()){
+            MemberEntity entity= Optionalentity.get();
+             String memail=entity.toDto().getMemail();
+
+             return memail;
+        }
+        return null;
+    }
+
+    @Transactional
+    public int findpassword( MemberDto memberDto){
+        Optional<MemberEntity>Optionalentity = memberEntityRepository.findByMemailAndMphone(memberDto.getMemail(),memberDto.getMphone());
+        if(Optionalentity.isPresent()){
+              Random random = new Random();
+                  int mno=random.nextInt(9);
+                      return mno;
+
+        }
+        return 0;
+    }
+
+
+
+
+
+    //1.db에 저장하기전에 해당 이메일로 된 이메일 존재하는 지 검사
+
+
+
 
 
 /*
