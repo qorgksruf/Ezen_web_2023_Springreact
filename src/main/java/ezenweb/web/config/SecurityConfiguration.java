@@ -54,9 +54,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                                 .ignoringAntMatchers("/member/info")//특정 매핑 url csrf 무시
                                  .ignoringAntMatchers("/member/login")
                                  .ignoringAntMatchers("/member/findid")
-                                   .ignoringAntMatchers("/member/findpassword")
-                                  .ignoringAntMatchers("/member/byeuser")
+                                 .ignoringAntMatchers("/member/findpassword")
+                                 .ignoringAntMatchers("/member/byeuser")
                                  .ignoringAntMatchers("/member/bye")
+                                 .ignoringAntMatchers("/member/memberupdate")
                 .and() //기능 추가할때 사용되는 메소드
                         .formLogin()//
                         .loginPage("/member/login")//로그인 으로 사용될 페이지의 매핑 URL

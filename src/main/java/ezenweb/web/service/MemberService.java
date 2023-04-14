@@ -31,15 +31,43 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
     @Override// 토큰 결과[JSON]{필드명:값,필드명:값}
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
-
         OAuth2UserService oAuth2UserService = new DefaultOAuth2UserService();
             log.info("서비스정보::"+oAuth2UserService.loadUser(userRequest));
 
         OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
             log.info("회원정보::"+oAuth2User.getAuthorities());
 
-         String registration = userRequest.getClientRegistration().getRegistrationId();
-         log.info("클라이언트아이디"+registration);
+        String  registrationId = userRequest.getClientRegistration().getRegistrationId();
+
+        String email=null;
+        String name=null;
+
+        if(registrationId.equals("kakao")){ //카카오 회원이면
+
+            Map<String, Object> kakao_account = (Map<String , Object>)oAuth2User.getAttributes().get("kakao_account");
+            log.info("카카오 회원 정보 : " + kakao_account );
+            Map<String, Object> profile = (Map<String, Object>)kakao_account.get("profile");
+            log.info("카카오 프로필 정보 : " + profile);
+
+            email = (String)kakao_account.get("email");
+            log.info("카카오 이메일 : " + email );
+            name = (String)profile.get("nickname");
+            log.info("카카오 이름 : " + name );
+
+        }else if(registrationId.equals("naver")){ //만약에 네이버 회원이면
+
+            Map<String, Object> response = (Map<String, Object>)oAuth2User.getAttributes().get("response");
+            email=(String)response.get("email");
+            name=(String)response.get("nickname");
+
+        }else if(registrationId.equals("google")){  //만약에 구글 회원이면
+            //구글의 이메일 호출
+            email=(String)oAuth2User.getAttributes().get("email");
+            //log.info("google name:"+registrationId);
+            //구글의 이름 호출
+            name=(String)oAuth2User.getAttributes().get("name");
+        }
+
 
          MemberDto memberDto = new MemberDto();
 
@@ -50,16 +78,12 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
                                                      .getUserNameAttributeName();
 
                     log.info("oauth2UserInfo::"+oauth2UserInfo);
-          //구글의 이메일 호출
-           String email=(String)oAuth2User.getAttributes().get("email");
-                //log.info("google name:"+registrationId);
-            //구글의 이름 호출
-           String name=(String)oAuth2User.getAttributes().get("name");
+
                 //log.info("google email:"+registrationId);
             memberDto.setMemail(email);
             memberDto.setMname(name);
                 Set<GrantedAuthority> 권한목록 = new HashSet<>();
-                SimpleGrantedAuthority 권한 = new SimpleGrantedAuthority("ROLE_oauthuser");
+                SimpleGrantedAuthority 권한 = new SimpleGrantedAuthority("ROLE_user");
                 권한목록.add(권한);
                 memberDto.set권한목록(권한목록);
 
@@ -253,7 +277,19 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
         return 0;
     }
 
-
+    //회원수정과제
+    @Transactional
+    public boolean memberupdate(MemberDto memberDto) {
+        Optional<MemberEntity> entityOptional=
+                memberEntityRepository.findByMnameAndMphone(memberDto.getMname(), memberDto.getMphone());
+        if(entityOptional.isPresent()){
+            MemberEntity entity= entityOptional.get();
+            entity.setMname(memberDto.getMname());
+            entity.setMphone(memberDto.getMphone());
+            return true;
+        }
+        return false;
+    }
 
 
 

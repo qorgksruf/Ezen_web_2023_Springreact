@@ -36,6 +36,7 @@ public interface MemberEntityRepository extends JpaRepository<MemberEntity, Inte
     //Optional<MemberEntity> findBypassword(int memail);
 
 
+    //회원수정하기 과제~!!!!
 
 
 }

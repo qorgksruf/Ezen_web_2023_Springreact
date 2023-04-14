@@ -164,3 +164,31 @@ function bye() {
     })
 
 }
+
+
+//회원수정하기
+function update() {
+    console.log("회원수정하기");
+
+    let info={
+        mname:document.querySelector('.mname').value,
+        mphone:document.querySelector('.mphone').value
+    }
+    console.log(info);
+
+    $.ajax({
+        url:"/member/memberupdate",
+        method:"put",
+        data:info,
+        success:(r)=>{
+             console.log(r);
+             if(r==true){
+                alert("회원수정되셨습니다")
+             }else{
+                alert("수정실패")
+             }
+        }
+    })
+
+}
+

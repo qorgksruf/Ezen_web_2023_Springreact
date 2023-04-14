@@ -102,12 +102,16 @@ public class MemberController {
         return new ClassPathResource("templates/member/findpassword.html");
     }
 
+
+
+
+
+    //회원정보 탈퇴 과제
     @GetMapping("/byeuser")
     public Resource getbyeuser(){
         return new ClassPathResource("templates/member/byeuser.html");
     }
 
-    //회원정보 탈퇴 과제
     @DeleteMapping("/bye")
     public boolean delete(@RequestParam int mno, @RequestParam String mpassword ){
         log.info("member bye delete int mno"+mno);
@@ -117,5 +121,26 @@ public class MemberController {
         //return result;
         return true;
     }
+
+
+
+
+    //회원정보 수정 과제
+
+    @GetMapping("/memberupdate")
+    public Resource getmemberupdate(){
+        return new ClassPathResource("templates/member/memberupdate.html");
+    }
+
+    @PutMapping ("/memberupdate")
+    public boolean memberupdate(@RequestBody MemberDto memberDto){
+        log.info("member memberupdate String mname"+memberDto.getMname());
+        log.info("member memberupdate String mphone"+memberDto.getMphone());
+
+        boolean result = memberService.memberupdate(memberDto);
+        //return result;
+        return true;
+    }
+
 
 }
