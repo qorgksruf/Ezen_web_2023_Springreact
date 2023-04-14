@@ -70,7 +70,7 @@ function getMember(){
                 document.querySelector('.infobox').innerHTML=`${r.mname}님`
                 document.querySelector('.infobox').innerHTML+=
                             `<a href="/member/logout"><button type="button"> 로그아웃 </button></a>
-                            <button onclick="getDelete()" type="button"> 회원탈퇴 </button>`
+                            <a href="/member/byeuser"><button type="button">회원탈퇴</button></a>`
             }
        })
 }
@@ -112,6 +112,7 @@ function findId() {
         success:(r)=>{
              console.log(r);
             document.querySelector('.find').innerHTML=`${r}`
+
         }
     })
 
@@ -141,8 +142,8 @@ function findpassword() {
 }
 
 
-//회원탈퇴
-function bye() {
+//회원탈퇴않
+function byeuser() {
     console.log("회원탈퇴하기버튼 클릭");
 
     let mpassword=document.querySelector('.mpassword').value;
@@ -150,15 +151,16 @@ function bye() {
 
     console.log("password확인"+mpassword);
     $.ajax({
-        url:"/member/bye",
+        url:"/member/byeuser",
         method:"delete",
         data:{mpassword:mpassword,mno:mno},
         success:(r)=>{
              console.log(r);
              if(r==true){
-                alert("회원탈퇴되셨습니다")
+                alert("회원탈퇴되셨습니다");
+                location.href="/"
              }else{
-                alert("탈퇴가되지않았습니다")
+                alert("탈퇴가되지았습니다")
              }
         }
     })
@@ -170,20 +172,27 @@ function bye() {
 function update() {
     console.log("회원수정하기");
 
+    let mno=memberInfo.mno;
+
     let info={
         mname:document.querySelector('.mname').value,
-        mphone:document.querySelector('.mphone').value
+        mphone:document.querySelector('.mphone').value,
+        mno
     }
     console.log(info);
 
     $.ajax({
         url:"/member/memberupdate",
         method:"put",
+
         data:info,
+        data:JSON.stringify(info),
+        contentType:"application/json",
         success:(r)=>{
              console.log(r);
              if(r==true){
-                alert("회원수정되셨습니다")
+                alert("회원수정되셨습니다");
+                location.href="/"
              }else{
                 alert("수정실패")
              }

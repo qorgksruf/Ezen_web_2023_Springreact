@@ -39,7 +39,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
         http
                 //권한에 따른 HTTP GET 요청 제한
                 .authorizeHttpRequests()//인증요청
-                    .antMatchers(("/member/info/mypage"))//인증시에만 사용할 url
+                .antMatchers(("/member/info/mypage"))//인증시에만 사용할 url
+                        .hasRole("user")
+                .antMatchers(("/member/byeuser"))//인증시에만 사용할 url
+                         .hasRole("user")
+                .antMatchers(("/member/memberupdate"))//인증시에만 사용할 url
+                        .hasRole("user")
+                .antMatchers(("/member/info/mypage"))//인증시에만 사용할 url
                     .hasRole("user")//위 url 패턴에 요청할 수 있는 권한명
                 .antMatchers("/admin/**")//localhost:8080/admin 이하 페이지는 모두 제한한다는 뜻ㄱ
                     .hasRole("admin")

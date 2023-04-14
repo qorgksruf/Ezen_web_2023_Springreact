@@ -108,11 +108,11 @@ public class MemberController {
 
     //회원정보 탈퇴 과제
     @GetMapping("/byeuser")
-    public Resource getbyeuser(){
+    public Resource getbye(){
         return new ClassPathResource("templates/member/byeuser.html");
     }
 
-    @DeleteMapping("/bye")
+    @DeleteMapping("/byeuser")
     public boolean delete(@RequestParam int mno, @RequestParam String mpassword ){
         log.info("member bye delete int mno"+mno);
         log.info("member bye delete String password"+mpassword);
@@ -134,9 +134,10 @@ public class MemberController {
 
     @PutMapping ("/memberupdate")
     public boolean memberupdate(@RequestBody MemberDto memberDto){
+        log.info("값들어오나요??");
         log.info("member memberupdate String mname"+memberDto.getMname());
         log.info("member memberupdate String mphone"+memberDto.getMphone());
-
+        log.info("member memberupdate String memail"+memberDto.getMno());
         boolean result = memberService.memberupdate(memberDto);
         //return result;
         return true;
