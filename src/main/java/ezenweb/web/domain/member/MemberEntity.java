@@ -1,9 +1,13 @@
 package ezenweb.web.domain.member;
 
 import ezenweb.web.domain.BaesTime;
+import ezenweb.web.domain.board.BoardEntity;
+import ezenweb.web.domain.board.ReplyEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,11 +32,20 @@ public class MemberEntity extends BaesTime {
 
     @Column private String mrole;   //회원등급/권한 명
 
+    @OneToMany(mappedBy="memberEntity")
+    @Builder.Default
+    private List<BoardEntity> boradEntityList= new ArrayList<>();
+
+    //댓글 목록 = 내가 쓴 댓글
+    @OneToMany(mappedBy="memberEntity")
+    @Builder.Default
+    private List<ReplyEntity>replyEntityList= new ArrayList<>();
+
     //Dto는 출력용
     public MemberDto toDto() {
         return MemberDto.builder()
               .mno(this.mno)
-                .mpassword(this.mpassword)
+              .mpassword(this.mpassword)
               .memail(this.memail)
               .mname(this.mname)
               .mphone(this.mphone)

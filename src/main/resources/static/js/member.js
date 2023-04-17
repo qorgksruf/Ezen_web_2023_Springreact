@@ -28,6 +28,25 @@ function onSignup() {
     })
 
 }
+//2.로그인
+function onLogin() {
+    let loginform = document.querySelectorAll(".loginform")[0];
+    let loginformData = new FormData(loginform);
+
+    $.ajax({
+        url:"/member/login",
+        method:"post",
+        data:loginformData,
+        contentType:false,
+        processData:false,
+        success:(r)=>{
+            console.log(r);
+
+        }
+    })
+
+}
+
 
 //로그인인데 시큐리티 사용하므로 폼 전송으로 로그인 요청
 /*function onLogin() {
