@@ -251,7 +251,7 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
             //인증 실패시: anonymousUser
             //인증 성공시: 회원정보[Dto]
         }
-        return (MemberDto) o;
+        return (MemberDto)o;
     }
 
     //회원아이디찾기 [과제]

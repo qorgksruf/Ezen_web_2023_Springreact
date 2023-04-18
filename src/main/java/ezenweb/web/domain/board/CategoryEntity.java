@@ -2,6 +2,7 @@ package ezenweb.web.domain.board;
 
 
 
+import ezenweb.web.domain.BaesTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,12 +18,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CategoryEntity {
+public class CategoryEntity extends BaesTime {
     @Id //primary key //jpa 사용시 한개 이상 필수
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int cno;
 
-    @Column
+    @Column(name="cname")
     private String cname;
     //양방향
     //카테고리[pk]<--->게시물[fk]
