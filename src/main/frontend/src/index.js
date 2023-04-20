@@ -10,6 +10,10 @@ import Productlist from './example/ex1component/Productlist';
 import Clock from './example/ex1component/Clock';
 import Comment from './example/ex2css/Comment';
 import CommentList from './example/ex2css/CommentList';
+import Hook1 from './example/ex3hook/Hook1';
+import Hook2 from './example/ex3hook/Hook2';
+
+
 import AppTodo from './example/exbook/AppTodo';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -65,6 +69,25 @@ root.render(
         <AppTodo />
     </React.StrictMode>
 );
+
+
+//예제7 Hook
+/*
+root.render(
+    <React.StrictMode>
+        <Hook1 />
+    </React.StrictMode>
+);
+*/
+//예제 8 Hook
+/*
+root.render(
+   // <React.StrictMode> //예외처리 경고,검사해주는 역활
+        <Hook2 />
+   //</React.StrictMode>
+);
+*/
+
 
 
 

@@ -74,6 +74,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                                  .ignoringAntMatchers("/board/write")
                                  .ignoringAntMatchers("/board/myboards")
                                 .ignoringAntMatchers("/board/delete")
+                                .ignoringAntMatchers("/todo")
 
                 .and() //기능 추가할때 사용되는 메소드
                         .formLogin()//
