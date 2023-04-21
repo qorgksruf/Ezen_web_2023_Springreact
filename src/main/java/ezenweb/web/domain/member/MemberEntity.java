@@ -49,8 +49,8 @@ public class MemberEntity extends BaesTime {
               .memail(this.memail)
               .mname(this.mname)
               .mphone(this.mphone)
-              .cdate(this.cdate)
-              .udate(this.udate)
+              .cdate(this.cdate.toString())
+              .udate(this.udate.toString())
               .build();
     }
 }

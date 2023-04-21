@@ -5,6 +5,7 @@ import ezenweb.web.controller.AuthSussessFailHandler;
 import ezenweb.web.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +16,11 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration  //스프링 빈에 등록 [MVC 컴포넌트]
 @Slf4j
@@ -99,7 +105,22 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                     .successHandler(authSussessFailHandler)
                     .userInfoEndpoint()//스프링 시큐리티로 들어올 수 있도록 시큐리티 로그인 엔드포인트[종착]
                     .userService(memberService);
+
+        http.cors(); //cors 정책 사용
+
+    }//configure end
+
+    //스프링 시큐리티에 CORS정책 설정[리액트[3000]가 요청 받기 위해서]
+    @Bean //빈등록
+    CorsConfigurationSource corsConfigurationSource(){
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); //주소
+        corsConfiguration.setAllowedMethods(Arrays.asList("HEAD","GET","POST","PUT","DELETE")); //HTTP매소드
+        corsConfiguration.setAllowedHeaders(Arrays.asList("content-Type","Cache-Control","Authorization")); //http설정
+        corsConfiguration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**",corsConfiguration);
+        return source;
     }
 
-
-}
+}//securityConfiguration class end

@@ -109,6 +109,15 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
     //1. 일반 회원가입[본 어플리케이션에서 가입한 사람]
     @Transactional
     public boolean write(MemberDto memberDto) {
+
+        //중복검사
+        MemberEntity entity2= memberEntityRepository.findByMemail(memberDto.getMemail());
+
+        if(entity2 != null){
+            return false;
+        }
+
+
         //스프링 시큐리티에서 제공하는 암호화[사람이 이해하기 어렵고 컴퓨터는 이해할 수 있는 단어] 사용하기
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         //인코더 : 암호화  즉 형식을로 변경 //디코더: 원본으로 되돌리기

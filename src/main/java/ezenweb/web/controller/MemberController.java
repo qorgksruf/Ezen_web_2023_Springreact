@@ -11,7 +11,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j //로그 기능
 @RequestMapping("/member")
+@CrossOrigin(origins = "http://localhost:3000")
 public class MemberController {
+
+
+    //서버사이드 라이팅: 클라이언트가 서버에게 html요청하는 방식 [리엑트 통합 개발일경우 사용안함]
+    /*
     //회원가입
     @GetMapping("/signup")
     public Resource getSignup(){
@@ -22,7 +27,7 @@ public class MemberController {
     public Resource getLogin(){
         return new ClassPathResource("templates/member/login.html");
     }
-
+    */
 
     //@Autowired없을때 객체[빈]생성
     //MemberService memberService = new MemberService();

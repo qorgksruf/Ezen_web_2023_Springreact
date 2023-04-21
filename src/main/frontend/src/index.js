@@ -15,6 +15,8 @@ import Hook2 from './example/ex3hook/Hook2';
 
 
 import AppTodo from './example/exbook/AppTodo';
+import Index from './Component/Index';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 /*
@@ -64,11 +66,18 @@ setInterval( () => {
 );*/
 
 //예제6 Todo적용
+/*
 root.render(
     <React.StrictMode>
         <AppTodo />
     </React.StrictMode>
 );
+*/
+//수업용 컴포넌트
+root.render(
+        <Index />
+);
+
 
 
 //예제7 Hook
