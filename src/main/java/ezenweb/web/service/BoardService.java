@@ -46,15 +46,14 @@ public class BoardService {
 
     //모든카테고리출력
     @Transactional
-    public Map<Integer,String> categoryList(){
-        log.info("s categoryList");
-        List <CategoryEntity> categoryEntityList = categoryEntityRepository.findAll();
-       //형번환 List<엔티티>-->map
-        Map<Integer,String>map=new HashMap<>();
+    public List<CategoryDto> categoryList(  ){    log.info("s categoryList : " );
+        List<CategoryEntity> categoryEntityList = categoryEntityRepository.findAll();
+
+        List<CategoryDto> list = new ArrayList<>();
         categoryEntityList.forEach( (e)->{
-            map.put(e.getCno(),e.getCname());
+            list.add( new CategoryDto( e.getCno() , e.getCname()) );
         });
-        return map;
+        return list;
     }
 
 

@@ -73,6 +73,7 @@ root.render(
     </React.StrictMode>
 );
 */
+
 //수업용 컴포넌트
 root.render(
         <Index />

@@ -113,10 +113,9 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
         //중복검사
         MemberEntity entity2= memberEntityRepository.findByMemail(memberDto.getMemail());
 
-        if(entity2 != null){
+        if(entity2 != null && memberEntityRepository.existsByMphone(memberDto.getMphone())==true){
             return false;
         }
-
 
         //스프링 시큐리티에서 제공하는 암호화[사람이 이해하기 어렵고 컴퓨터는 이해할 수 있는 단어] 사용하기
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -133,6 +132,8 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
             return true;
         }
         return false;
+
+
     }
     //로그인[시큐리티 사용 했을때]
     //시큐리티는 API[누군가 미리 만들어진 메소드 안에서 커스터마이징[수정]]
@@ -184,6 +185,23 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
                 //.equals 힙 메모리 비교
                 //matches():문자열 주어진 패턴 포함 동일여부 체크
           return true;*/
+
+
+    //쌤이랑 한거 아이디 중복검사
+    public boolean idcheck(String memail){
+
+        return  memberEntityRepository.existsByMemail(memail);
+
+
+    }
+
+    //과제
+    //전화번호중복
+    public boolean phonecheck(String mphone){
+
+        return memberEntityRepository.existsByMphone(mphone);
+
+    }
 
 
     //회원수정

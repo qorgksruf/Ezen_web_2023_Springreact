@@ -23,9 +23,9 @@ export default function Login(props) {
                     //js 로컬 스토리지에 로그인 성공한 흔적 남기기
                     //localStorage.setItem("key",value)://String타입
                         //jsom.stringfly()
-                    localStorage.setItem("login_token" , JSON.stringify( r.data ) );
-
-                    //window.location.href="/";
+                    //localStorage.setItem("login_token" , JSON.stringify( r.data ) );
+                    sessionStorage.setItem("login_token" , JSON.stringify( r.data ) );
+                    window.location.href="/";
                 }
             })
     }
@@ -36,6 +36,7 @@ export default function Login(props) {
                 아이디[이메일] : <input type="text" name="memail"/><br/>
                 비밀번호 :<input type="text" name="mpassword"/> <br/>
                 <button onClick={onLogin} type="button">로그인</button>
+                <a href="/member/find">계정정보 찾기</a>
                 <a href="http://localhost:9090/oauth2/authorization/google">구글로그인</a>
                 <a href="http://localhost:9090/oauth2/authorization/kakao">카카오로그인</a>
                 <a href="http://localhost:9090/oauth2/authorization/naver">네이버로그인</a>

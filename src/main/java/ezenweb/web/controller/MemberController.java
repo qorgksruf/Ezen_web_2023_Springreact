@@ -80,6 +80,28 @@ public class MemberController {
         return memberService.logout();
     }*/
 
+    //아이디 중복
+    @GetMapping("/idcheck")
+    public boolean idcheck(@RequestParam String memail){
+
+        log.info("idcheck id:::"+memail);
+
+        return memberService.idcheck(memail);
+
+    }
+
+    //전화번호중복
+    @GetMapping("/phonecheck")
+    public boolean phonecheck(@RequestParam String mphone){
+
+        log.info("phonecheck phone:::" +mphone);
+
+
+
+        return memberService.phonecheck(mphone);
+
+    }
+
 
     //회원아이디찾기[과제]
     @PostMapping("/findid")
@@ -88,6 +110,9 @@ public class MemberController {
         String result=memberService.findid(memberDto);
         return result;
     }
+
+
+
 
     @GetMapping("/findid")
     public Resource getfindid(){
