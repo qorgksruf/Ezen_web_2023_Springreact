@@ -11,6 +11,7 @@ import Find from "./member/Find"
 import List from "./board/List"
 import Write from "./board/Write"
 import DashBoard from "./admin/DashBoard"
+import AppTodo from "../example/exbook/AppTodo"
 /*
 
     react-router-dom 다양한 라우터 컴포넌트 제공
@@ -37,6 +38,7 @@ export default function Index( props ) {
                 <Route path="/board/list" element = { <List/> } />
                 <Route path="/admin/dashboard" element = { <DashBoard/> } />
                 <Route path="/board/write" element = { <Write/> } />
+                <Route path="/todo" element = { <AppTodo/> } />
             </Routes>
             <Footer />
         </BrowserRouter>

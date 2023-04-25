@@ -2,6 +2,7 @@ package ezenweb.web.controller;
 
 import ezenweb.web.domain.board.BoardDto;
 import ezenweb.web.domain.board.CategoryDto;
+import ezenweb.web.domain.board.PageDto;
 import ezenweb.web.service.BoardService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,20 +48,35 @@ public class BoardController {
     }
 
 
-    //2.게시물 쓰기 //body{"btitle":"입력한메목", "bcontent":"입력한내용","cno":선택받은 번호 }
-    @PostMapping("/write")//요청받은 json 필드명과 dto 필드명 일치할 경우 자동 매핑
+    //2.board 게시물 쓰기 //body{"btitle":"입력한메목", "bcontent":"입력한내용","cno":선택받은 번호 }
+    @PostMapping("")//요청받은 json 필드명과 dto 필드명 일치할 경우 자동 매핑
     public byte write(@RequestBody BoardDto boardDto){
         log.info("boardDto"+boardDto);
         byte result = boardService.write(boardDto);
         return result;
     }
-    //카테고리별 게시물출력
-    @GetMapping("/list")
-    public List<BoardDto>list(@RequestParam int cno){
+
+    //카테고리별 board 게시물출력
+    @GetMapping("")
+    public PageDto list(@RequestParam int cno ,@RequestParam int page  ){
         log.info("c list cno:::"+cno);
-        List<BoardDto> result = boardService.list(cno);
+        log.info("c list page:::"+page);
+        PageDto result = boardService.list(cno, page);
         return result;
     }
+
+    //board수정
+    @PutMapping("")
+    public  boolean put(){
+        return true;
+    }
+
+    //개별출력
+    @GetMapping("/getboard")
+    public  BoardDto getboard(int bno){
+        return null;
+    }
+
 
     //3.내가 쓴 게시물 출력
     @GetMapping("/myboards")
@@ -71,7 +87,7 @@ public class BoardController {
     }
 
 
-    //카테고리별 게시물출력
+    //선택한 게시물출력
     @GetMapping("/print")
     public BoardDto print(@RequestParam int bno){
         log.info("controller에 print 들어옴? print bno:::"+bno);
@@ -81,7 +97,7 @@ public class BoardController {
 
 
     //3.내가 쓴 게시물 삭제
-    @DeleteMapping ("/delete")
+    @DeleteMapping ("")
     public boolean delete(@RequestParam int bno){
         log.info("printdelte에 bno들어옴??"+bno);
 

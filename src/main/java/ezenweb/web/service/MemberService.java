@@ -273,7 +273,7 @@ public class MemberService implements UserDetailsService, OAuth2UserService<OAut
         log.info("Auth:" + SecurityContextHolder.getContext().getAuthentication());
         log.info("Auth:" + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         Object o = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (o.equals("annonymousUser")) {
+        if (o.equals("anonymousUser")) {
             return null;
             //인증 실패시: anonymousUser
             //인증 성공시: 회원정보[Dto]

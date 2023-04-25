@@ -3,33 +3,43 @@ import Todo from './Todo';
 import {List,Paper,Container } from '@mui/material';
 import AddTodo from './AddTodo';
 import axios from 'axios'; //npm install axios
+import Pagination from '@mui/material/Pagination';
 // 교재 App 컴포넌트 --> AppTodo 컴포넌트
 export default function AppTodo( props ) {
+
     // 1.
     // item 객체에 { id : "0" , title : "Hellow World 1" , done : true } 대입한것과 같음
-    const [ items , setItems ] = useState(
-        [
-        ]
-    );
+    const [ items , setItems ] = useState([]);
+    let [pageInfo,setPageInfo]=useState({'page':1});
+    let [totalPage,setTotalPage]=useState(1);
+    let [totalCount,setTotalCount]=useState(1);
     //컴포넌트가 실행될때 한번 이벤트 발생
     useEffect(()=>{
         //ajax: jquery설치가 필요
         //fetch: 리액트 전송 비동기 통신 함수[내장함수-설치x]
         //axios: 리액트 외부 라이브러리 [설치 필요] JSON통신 기본값
-        axios.get("http://192.168.17.80:9090/todo").then(r=>{
+        axios.get("/todo.do",{params:pageInfo}).then(r=>{
             console.log(r);
-            setItems(r.data);
+            setItems(r.data.todoDtoList);
+            setTotalPage(r.data.totalPage)
+            setTotalCount(r.data.totalCount)
         })
         //해당 주소의 매핑되는 컨트롤에 @CrossOrigin(origins = "http://localhost:3000")추기
 
         //axios.put("http://192.168.17.80:9090/todo").then(r=>{console.log(r); })
         //axios.delete("http://192.168.17.80:9090/todo",{params: {id:1} }).then(r=>{console.log(r); })
 
-    }, [])
+    }, [pageInfo])
+
+    const pageChange = (e)=>{
+               console.log(e.target.outerText); //해당 button 에서 밖으로 출력되는 text 호춣
+               pageInfo.page = e.target.outerText;
+               setPageInfo( {...pageInfo} )
+    }
 
     //2.items에 새로운 item 등록하는 함수
     const addItem=(item)=>{ //함수로부터 매개변수로 전달받은 아이템
-        axios.post( "http://192.168.17.80:9090/todo" , item )
+        axios.post( "/todo.do" , item )
                                            .then( r => {
                                                console.log( r );
                                            });
@@ -48,7 +58,7 @@ export default function AppTodo( props ) {
                 const newItems = items.filter(i=>i.id !== item.id);
                     //삭제할 id를 제외한  새로운 newItems배열이 선언
                  setItems([...newItems]);
-                 axios.delete("http://192.168.17.80:9090/todo",{params: {id:item.id } })
+                 axios.delete("/todo.do",{params: {id:item.id } })
                         .then(r=>{
                         console.log(r);;
                        })
@@ -76,6 +86,7 @@ export default function AppTodo( props ) {
 
 
 
+
     // 반복문 이용한 Todo 컴포넌트 생성
     //jsx의 style속성 방법
     let TodoItems =
@@ -96,7 +107,11 @@ export default function AppTodo( props ) {
         <div className="App">
                 <Container>
                      <AddTodo addItem={addItem} />
+                     {pageChange}
                      { TodoItems }
+                     <div>
+                     <Pagination count={totalPage} color="secondary" onClick={pageChange}/>
+                     </div>
                 </Container>
         </div>
     </> );

@@ -5,8 +5,12 @@ package ezenweb.web.service;
 import ezenweb.web.domain.Todo.TodoDto;
 import ezenweb.web.domain.Todo.TodoEntity;
 import ezenweb.web.domain.Todo.TodoentityRepository;
+import ezenweb.web.domain.Todo.TodopageDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -23,17 +27,24 @@ public class TodoService {
     private TodoentityRepository todoEntityRepository;
 
     @Transactional
-    public List<TodoDto> get(){
+    public TodopageDto get( int page){
 
-        List<TodoEntity> entity =todoEntityRepository.findAll();
+        PageRequest pageable = PageRequest.of(page-1,3);
+
+        Page<TodoEntity> entityPage =todoEntityRepository.findAll(pageable);
 
         List<TodoDto>list = new ArrayList<>();
 
-        entity.forEach( (e) -> {
+        entityPage.forEach( (e) -> {
             list.add (e.todoDto());
         });
         //서비스 구현
-        return list; //서비스에서 리턴 결과를 axious에게 응답
+        return TodopageDto.builder()
+                .totalCount(entityPage.getTotalElements())
+                .totalPage(entityPage.getTotalPages())
+                .TodoDtoList(list)
+                .page(page)
+                .build();
     };
 
 

@@ -6,6 +6,9 @@ import ezenweb.web.domain.member.MemberEntity;
 import ezenweb.web.domain.member.MemberEntityRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.awt.print.Pageable;
 import java.util.*;
 
 
@@ -103,29 +107,29 @@ public class BoardService {
 
     //카테고리별 게시물 출력
     @Transactional
-    public List<BoardDto>list( int cno){
+    public PageDto list( int cno , int page ){
+        //1.pageable 인터페이스 [페이징처리 관련 api]
+            // domain 사용
+        PageRequest pageable = PageRequest.of(page-1,3, Sort.by(Sort.Direction.DESC,"bno") ); //즉 페이지당 10개씩 출력을 의미함
+                //PageRequest.of(페이지번호[0시작],페이지당표시개수)   //Sort.by: 정렬기준필드명 bno기준으로 정렬하겟다는거임
+        Page<BoardEntity> entityPage= boardEntityRepository.findBySearch(cno, pageable);
+        //
 
-        List<BoardDto>list = new ArrayList<>();
-        if(cno==0){//전체보기
+        List<BoardDto>boardDtoList= new ArrayList<>();
+        entityPage.forEach( (b) ->{
+            boardDtoList.add(b.toDto());
+        });
 
-            List<BoardEntity>boardEntityList=boardEntityRepository.findAll(); //모든 카테고리 정보 전체 출력
-            boardEntityList.forEach( (e)->{
-                list.add(e.toDto());
-            });
-            return list;
+        log.info("총게시물수:"+entityPage.getTotalElements());
+        log.info("총페이지수:"+entityPage.getTotalPages());
 
-        }else{//카테고리별
-
-            Optional<CategoryEntity>categoryEntityOptional=categoryEntityRepository.findById(cno);
-            if(categoryEntityOptional.isPresent()){
-                CategoryEntity categoryEntity=categoryEntityOptional.get();
-                categoryEntity.getBoardEntityList().forEach( (e)->{
-                   list.add(e.toDto());
-                });
-                return list;
-            }
-        }
-        return null;
+        return PageDto.builder()
+                .boardDtoList((boardDtoList))
+                .totalCount(entityPage.getTotalElements())
+                .totalPage(entityPage.getTotalPages())
+                .cno(cno)
+                .page(page)
+                .build();
     }
 
 

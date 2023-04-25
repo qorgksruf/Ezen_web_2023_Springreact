@@ -1,10 +1,11 @@
-import React , { useState } from 'react';
+import React , { useState, useEffect } from 'react';
 import { ListItem , ListItemText , InputBase ,
         Checkbox,ListItemSecondaryAction,IconButton } from '@mui/material';
 
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
 import axios from 'axios';
-
+//---------------과제----------------------------------------//
+import Pagination from '@mui/material/Pagination';
 /*
     npm install @mui/material @emotion/react @emotion/styled
     npm install @mui/material @mui/styled-engine-sc styled-components
@@ -12,6 +13,23 @@ import axios from 'axios';
 */
 
 export default function Todo( props ) {
+    //페이징수 처리를위한 배열
+/*    let[ rows,setRows ]=useState([])
+    let [pageInfo,setPageInfo]=useState({'page':1});
+    let [totalPage,setTotalPage]=useState(1);
+    let [totalCount,setTotalCount]=useState(1);*/
+
+/*   useEffect( () => {
+        axios.get('/todo.do',{params:pageInfo}).then( r => {
+            console.log(r);
+            setRows(r.data.list)
+            setTotalPage(r.data.totalPage)
+            setTotalCount(r.data.totalCount)
+        } )
+   } , [pageInfo] )*/
+
+
+//---------------과제---------------------------
 
     console.log( props );
 
@@ -42,7 +60,7 @@ export default function Todo( props ) {
         console.log("turnOnReadOnly")
         if(e.key == "Enter"){
            setReadOnly(true);
-            axios.put("http://192.168.17.80:9090/todo",item).then(r=>{console.log(r); })
+            axios.put("/todo.do",item).then(r=>{console.log(r); })
 
         }
 

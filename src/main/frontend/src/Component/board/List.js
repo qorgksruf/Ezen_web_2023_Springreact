@@ -12,34 +12,54 @@ import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 //---------------------------------------------------------
+import Pagination from '@mui/material/Pagination';
+
+
 export default function List( props ){
 
     //1.요청한 게시물 정보를 가지고 있는 리스트 변수 [상태관리변수]
     let[ rows,setRows ]=useState([]) //처음엔 깡통배열임
-    let[ cno,setCno ]=useState([0])
+    let [pageInfo,setPageInfo]=useState({'cno':0,'page':1});
+    let [totalPage,setTotalPage]=useState(1);
+    let [totalCount,setTotalCount]=useState(1);
     //서버에게 요청하기 [컴포넌트가 처음 생성되었을떄 ]
     useEffect(()=>{
-        axios.get('/board/list',{params:{cno:cno }}) //0은 전체보기
-            .then(res=>{console.log(res); setRows(res.data)})
+        axios.get('/board',{params:pageInfo}) //0은 전체보기
+            .then(res=>{console.log(res);
+            setRows(res.data.boardDtoList)
+            setTotalPage(res.data.totalPage)
+            setTotalCount(res.data.totalCount)
+
+            })
             .catch(err=>{console.log(err);})
-    }, [cno]) //cno 변경될때마다 해당 useEffect 실행된다
+    }, [pageInfo]) //pageInfo(cno,page)  변경될때마다 해당 useEffect 실행된다
 
 
     //useEffect(()=>{})   : 생성,업데이트
     //useEffect(()=>{},[]):생성될때 1번
     //useEffect(()=>)
 
-    //카테고리 변경
-    const CategoryChange=(cno)=>{
-        //alert('List 컴포넌트에서 이밴트발생'+cno)
-        setCno(cno);
-    }
+    // 3. 카테고리 변경
+    const categoryChange = ( cno ) => {
+        pageInfo.cno = cno; setPageInfo( {...pageInfo} );
+    } // [ ...배열명 ] , { ...객체명 } : 기존 배열/객체의 새로운 메모리 할당
 
+    //4.페이징 번호 선택
+    const selectPage = (e)=>{
+       //console.log(e);
+       //console.log(e.target);           //button
+       //console.log(e.target.value);     //button이라서 value속성 없음
+       //console.log(e.target.innerHTML); //해당 button 에서 안에 작성된 html 호출
+       console.log(e.target.outerText); //해당 button 에서 밖으로 출력되는 text 호춣
+       pageInfo.page = e.target.outerText;
+       setPageInfo( {...pageInfo} )
+    }
 
     return(<>
        <Container>
+       <div> 현재 페이지 : { pageInfo.page } 게시물수:{totalCount} </div>
         <div style={{display:'flex', justifyContent:'space-between', align:'center'}}>
-           <CategoryList CategoryChange={CategoryChange} />
+           <CategoryList categoryChange = { categoryChange } />
            <a href="/board/write"> <Button variant="outlined">게시물 작성</Button></a>
         </div>
         <TableContainer component={Paper}>
@@ -68,6 +88,9 @@ export default function List( props ){
             </TableBody>
           </Table>
         </TableContainer>
+            <div>
+              <Pagination count={ totalPage } color="primary" onClick={selectPage} />
+            </div>
        </Container>
     </>);
 }

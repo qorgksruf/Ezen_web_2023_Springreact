@@ -38,7 +38,10 @@ public interface MemberEntityRepository extends JpaRepository<MemberEntity, Inte
     //Optional<MemberEntity> findBypassword(int memail);
 
 
-    //회원수정하기 과제~!!!!
+    //JPA형식이 아닌 순수 SQL 적용하는 함수 정의
+
+
+
 
 
 }
