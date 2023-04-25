@@ -15,7 +15,7 @@ export default function Signup(props) {
         //2.
        console.log( e.target.value) ;
 
-        axios.get("http://localhost:9090/member/idcheck",{params: {memail: e.target.value} } )
+        axios.get("/member/idcheck",{params: {memail: e.target.value} } )
             .then(res=> {
                 console.log(res)
 
@@ -45,7 +45,7 @@ export default function Signup(props) {
 
 
 
-        axios.get("http://localhost:9090/member/phonecheck",{params: {mphone: e.target.value} } )
+        axios.get("/member/phonecheck",{params: {mphone: e.target.value} } )
             .then(res=>{
                 console.log(res)
                    if(res.data==true){
@@ -75,12 +75,12 @@ export default function Signup(props) {
 
             //ajax---->axios
             axios
-                .post("http://localhost:9090/member/info",info)
+                .post("/member/info",info)
                 .then (r =>{
                       console.log(r)
                       if(r.data==true){
                          alert('가입되셨습니다');
-                         Window.location.href ="/login"; // Window.location.href이동할 경로
+                         Window.location.href ="/member/login"; // Window.location.href이동할 경로
                         }else{
                             alert('가입실패 꺼져');
                         }

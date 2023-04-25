@@ -48,42 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         //super.configure(http); //super: 부모 클래스 호출
         http
-                //권한에 따른 HTTP GET 요청 제한
-                .authorizeHttpRequests()//인증요청
-                .antMatchers(("/member/info/mypage"))//인증시에만 사용할 url
-                        .hasRole("user")
-                .antMatchers(("/member/byeuser"))//인증시에만 사용할 url
-                         .hasRole("user")
-                .antMatchers(("/member/memberupdate"))//인증시에만 사용할 url
-                        .hasRole("user")
-                .antMatchers(("/member/info/mypage"))//인증시에만 사용할 url
-                    .hasRole("user")//위 url 패턴에 요청할 수 있는 권한명
-                //.antMatchers(("/board/write"))//게시판페이지는 회원만 가능
-                    //.hasRole("user")
-                .antMatchers("/admin/**")//localhost:8080/admin 이하 페이지는 모두 제한한다는 뜻ㄱ
-                    .hasRole("admin")
-                .antMatchers("/**")     //localhost:8080 이하 페이지는 권한 해제
-                     .permitAll()//그외 요청들에대한 권한 해제한다는 뜻
-                    //토큰(ROLE_user): ROL_ 제외한 권한명 작성//인증 자체가 없을경우 로그인페이지로 자동이동됨
-                //.antMatchers("/member/info","/member/login","/member/logout").permitAll()
-                .and()
-                        .csrf() //사이트 간 요청위조[post,put사용 불가능]
-                            //.disabled() 모든 http csrd
-                                .ignoringAntMatchers("/member/info")//특정 매핑 url csrf 무시
-                                 .ignoringAntMatchers("/member/login")
-                                 .ignoringAntMatchers("/member/findid")
-                                 .ignoringAntMatchers("/member/findpassword")
-                                 .ignoringAntMatchers("/member/byeuser")
-                                 .ignoringAntMatchers("/member/bye")
-                                 .ignoringAntMatchers("/member/memberupdate")
-                                  .ignoringAntMatchers("/board/category/write")
-                                 .ignoringAntMatchers("/board/write")
-                                 .ignoringAntMatchers("/board/myboards")
-                                .ignoringAntMatchers("/board/delete")
-                                .ignoringAntMatchers("/todo")
-
-                .and() //기능 추가할때 사용되는 메소드
-                        .formLogin()//
+                 .formLogin()//
                         .loginPage("/member/login")//로그인 으로 사용될 페이지의 매핑 URL
                         .loginProcessingUrl("/member/login")//로그인을 처리할 매핑 url
                         //.defaultSuccessUrl("/")//로그인 성공했을때 이동할 매핑 url
@@ -107,11 +72,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                     .userService(memberService);
 
         http.cors(); //cors 정책 사용
-
+        http.csrf().disable(); //csrd사용 해제
     }//configure end
 
     //스프링 시큐리티에 CORS정책 설정[리액트[3000]가 요청 받기 위해서]
-    @Bean //빈등록
+/*    @Bean //빈등록
     CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); //주소
@@ -121,6 +86,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**",corsConfiguration);
         return source;
-    }
+    }*/
 
 }//securityConfiguration class end

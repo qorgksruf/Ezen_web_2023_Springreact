@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j //로그 기능
 @RequestMapping("/member")
-@CrossOrigin(origins = "http://localhost:3000")
+/*@CrossOrigin(origins = "http://localhost:3000")*/
 public class MemberController {
 
 
@@ -114,10 +114,10 @@ public class MemberController {
 
 
 
-    @GetMapping("/findid")
+/*    @GetMapping("/findid")
     public Resource getfindid(){
         return new ClassPathResource("templates/member/findid.html");
-    }
+    }*/
 
 
     //회원비밀번호찾기
@@ -126,21 +126,21 @@ public class MemberController {
         int result=memberService.findpassword(memberDto);
         return result;
     }
-
+/*
     @GetMapping("/findpassword")
     public Resource getfindpassword(){
         return new ClassPathResource("templates/member/findpassword.html");
-    }
+    }*/
 
 
 
 
 
-    //회원정보 탈퇴 과제
+/*    //회원정보 탈퇴 과제
     @GetMapping("/byeuser")
     public Resource getbye(){
         return new ClassPathResource("templates/member/byeuser.html");
-    }
+    }*/
 
     @DeleteMapping("/byeuser")
     public boolean delete(@RequestParam int mno, @RequestParam String mpassword ){
@@ -155,12 +155,12 @@ public class MemberController {
 
 
 
-    //회원정보 수정 과제
+/*    //회원정보 수정 과제
 
     @GetMapping("/memberupdate")
     public Resource getmemberupdate(){
         return new ClassPathResource("templates/member/memberupdate.html");
-    }
+    }*/
 
     @PutMapping ("/memberupdate")
     public boolean memberupdate(@RequestBody MemberDto memberDto){

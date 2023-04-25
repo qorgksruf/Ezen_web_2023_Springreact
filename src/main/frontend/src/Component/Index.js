@@ -29,7 +29,6 @@ export default function Index( props ) {
     return ( <>
         <BrowserRouter>
             <Header/>
-
             <Routes >
                 <Route path="/" element = { <Main/> } />
                 <Route path="/member/login" element = { <Login/> } />
@@ -39,9 +38,7 @@ export default function Index( props ) {
                 <Route path="/admin/dashboard" element = { <DashBoard/> } />
                 <Route path="/board/write" element = { <Write/> } />
             </Routes>
-
             <Footer />
-
         </BrowserRouter>
     </> )
 }

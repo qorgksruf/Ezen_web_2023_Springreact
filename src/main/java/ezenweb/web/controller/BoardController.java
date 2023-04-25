@@ -15,18 +15,18 @@ import java.util.Map;
 @RestController
 @Slf4j
 @RequestMapping("/board")
-@CrossOrigin(origins = "http://localhost:3000")
+/*@CrossOrigin(origins = "http://localhost:3000")*/
 public class BoardController {
     //서비스 객체들
     @Autowired
     private BoardService boardService;
 
     //---------------view반환---------------------------------------
-
+/*
     @GetMapping("")
     public Resource index(){
         return new ClassPathResource("templates/board/list.html");
-    }
+    }*/
 
     //--------------modal 반횐--------------------------------------------//
     //1.카테고리 등록
