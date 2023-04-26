@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -107,12 +108,14 @@ public class BoardService {
 
     //카테고리별 게시물 출력
     @Transactional
-    public PageDto list( int cno , int page ){
+    public PageDto list( PageDto pageDto ){
+
+        log.info("pageDto boardService 검색눌렀을때:::"+pageDto);
         //1.pageable 인터페이스 [페이징처리 관련 api]
             // domain 사용
-        PageRequest pageable = PageRequest.of(page-1,3, Sort.by(Sort.Direction.DESC,"bno") ); //즉 페이지당 10개씩 출력을 의미함
+        PageRequest pageable = PageRequest.of(pageDto.getPage()-1,3, Sort.by(Sort.Direction.DESC,"bno") ); //즉 페이지당 10개씩 출력을 의미함
                 //PageRequest.of(페이지번호[0시작],페이지당표시개수)   //Sort.by: 정렬기준필드명 bno기준으로 정렬하겟다는거임
-        Page<BoardEntity> entityPage= boardEntityRepository.findBySearch(cno, pageable);
+        Page<BoardEntity> entityPage= boardEntityRepository.findBySearch(pageDto.getCno(), pageDto.getKey(), pageDto.getKeyword(),pageable);
         //
 
         List<BoardDto>boardDtoList= new ArrayList<>();
@@ -123,13 +126,12 @@ public class BoardService {
         log.info("총게시물수:"+entityPage.getTotalElements());
         log.info("총페이지수:"+entityPage.getTotalPages());
 
-        return PageDto.builder()
-                .boardDtoList((boardDtoList))
-                .totalCount(entityPage.getTotalElements())
-                .totalPage(entityPage.getTotalPages())
-                .cno(cno)
-                .page(page)
-                .build();
+        pageDto.setBoardDtoList( boardDtoList );
+        pageDto.setTotalCount( entityPage.getTotalElements() );
+        pageDto.setTotalPage( entityPage.getTotalPages() );
+
+
+        return pageDto;
     }
 
 
@@ -157,11 +159,6 @@ public class BoardService {
     @Transactional
     public BoardDto print(int bno) {
         log.info("controller에 들어옴? print bno:::" + bno);
-        /*MemberDto memberDto =(MemberDto)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        log.info("service myboards memberDto" + memberDto);
-
-        MemberEntity entity= memberEntityRepository.findByMemail(memberDto.getMemail())*/
-        ;
 
         BoardEntity boardEntity = boardEntityRepository.findById(bno).get();
 
@@ -185,6 +182,26 @@ public class BoardService {
 
             return false;
     }
+
+    @Transactional
+    //board 개별게시물 수정 [4/26 오후1:48 백한결]
+    public  boolean update(BoardDto boardDto){
+        log.info("boardDto들어오나요? 여긴 service입닌다"+boardDto);
+
+        Optional<BoardEntity> entityOptional
+                = boardEntityRepository.findById( boardDto.getBno());
+
+       if(entityOptional.isPresent()){
+           BoardEntity boardEntity = entityOptional.get();
+           boardEntity.setBtitle(boardDto.getBtitle());
+           boardEntity.setBcontent(boardDto.getBcontent());
+           return true;
+       }
+        return false ;
+    }
+
+    //board 개별게시물 수정 [4/26 오후1:48 백한결]
+
 
 }
 

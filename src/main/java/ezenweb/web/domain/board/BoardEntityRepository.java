@@ -19,10 +19,27 @@ public interface BoardEntityRepository extends JpaRepository<BoardEntity, Intege
     @Query(
             value = " select *" +
                     " from board " +
-                    " where if( :cno=0, cno like '%%' ,cno=:cno )"
+                    " where if( :cno=0, cno like '%%' ,cno=:cno ) and "+
+                    " if(:key='', true , " +
+                    " if(:key='btitle', btitle like %:keyword%, bcontent like %:keyword%) )"
+                    //if(조건, 참,거짓if(조건,참,거짓)
             , nativeQuery = true)
-    Page<BoardEntity> findBySearch(int cno, PageRequest pageable);
+    Page<BoardEntity> findBySearch(int cno,String key, String keyword, PageRequest pageable);
+
 
     //findBySearch
+
+
+
+/*    //본인이 쓴 게시물 수정 [2023-04-26 수정하기 repository]
+    @Query(
+            value =" UPDATE board SET " +
+                    " btitle = 'newkey' ," +
+                    " bcontent='newkeyword'" +
+                    " WHERE bno=4;"
+            , nativeQuery = true)
+
+
+    Page<BoardEntity> findBySearch(int bno,String newkey,String newkeyword);*/
 
 }

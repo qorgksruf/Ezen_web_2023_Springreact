@@ -27,4 +27,6 @@ public class ReplyEntity {
     @ManyToOne
     @JoinColumn(name = "mno")@ToString.Exclude
     private MemberEntity memberEntity;
+
+
 }

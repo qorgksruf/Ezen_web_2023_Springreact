@@ -19,7 +19,7 @@ export default function Find( props ){
                   }
 
                 axios
-                    .post("http://localhost:9090/member/findid", info)
+                    .post("/member/findid", info)
                     .then(r=>{
                         console.log("find axios확인")
                         console.log(r);
@@ -45,7 +45,7 @@ export default function Find( props ){
                       }
 
                     axios
-                        .post("http://localhost:9090/member/findpassword", info)
+                        .post("/member/findpassword", info)
                         .then(r=>{
                             console.log("find비번 axios확인")
                             console.log(r);

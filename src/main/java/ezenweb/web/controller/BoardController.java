@@ -58,23 +58,30 @@ public class BoardController {
 
     //카테고리별 board 게시물출력
     @GetMapping("")
-    public PageDto list(@RequestParam int cno ,@RequestParam int page  ){
-        log.info("c list cno:::"+cno);
-        log.info("c list page:::"+page);
-        PageDto result = boardService.list(cno, page);
+    public PageDto list(PageDto pageDto ){
+        //log.info("c list cno:::"+cno);
+       // log.info("c list page:::"+page);
+        PageDto result = boardService.list(pageDto);
         return result;
     }
 
-    //board수정
-    @PutMapping("")
-    public  boolean put(){
-        return true;
+    //board 개별게시물 수정 [4/26 오후1:48 백한결]
+    @PutMapping("/put")
+    public  boolean update(@RequestBody BoardDto boardDto){
+        log.info("pageDto들어오나요?"+boardDto);
+
+        boolean result = boardService.update(boardDto);
+
+        return result ;
     }
 
     //개별출력
     @GetMapping("/getboard")
-    public  BoardDto getboard(int bno){
-        return null;
+    public  BoardDto getboard(@RequestParam int bno){
+
+        BoardDto result= boardService.print(bno);
+
+        return result;
     }
 
 

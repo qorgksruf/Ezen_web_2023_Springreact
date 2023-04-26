@@ -42,4 +42,7 @@ public class BoardDto {
                 .bcontent(this.bcontent)
                 .build();
     }
+
+
+
 }
