@@ -88,9 +88,30 @@ export default function View( props ){
 
     }
 
+
+    //대댓글 [과제 2023-04-27]
     const onReplyRegi = (rno)=>{
         console.log("onReplyRegi함수실행");
         console.log(rno)
+
+        let recontent = prompt('댓글 입력하세요');
+
+        let info={
+            recontent: recontent
+        }
+
+        console.log(recontent)
+
+            axios.post("/board/reply", info, {params: {"rno": rno} } )
+                .then(r=>{
+                    console.log(r.data)
+                    if(r.data == true){
+                        alert('대댓글작성완료')
+                    }else{
+                        alert('대댓글작성실패')
+                    }
+                })
+
     }
 
 
