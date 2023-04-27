@@ -15,7 +15,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class ReplyService {
-
+/*
     @Autowired
     private ReplyEntityRepository replyEntityRepository;
 
@@ -31,7 +31,7 @@ public class ReplyService {
             return false;
         }
         return true;
-    }
+    }*/
 /*
     //댓글삭제
     @Transactional

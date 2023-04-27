@@ -12,10 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
@@ -33,6 +30,14 @@ public class BoardService {
     private BoardEntityRepository boardEntityRepository;
     @Autowired
     private MemberEntityRepository memberEntityRepository;
+
+    @Autowired
+    private ReplyEntityRepository replyEntityRepository;
+
+
+/*    @Autowired
+    private RereplyEntityRepository rereplyEntityRepository;*/
+
 
 
     //카테고리 쓰기
@@ -155,14 +160,31 @@ public class BoardService {
         return list;
     }
     //과제
-    //카테고리별 게시물출력
+    //카테고리별 게시물출력 + 댓글출력
     @Transactional
     public BoardDto print(int bno) {
         log.info("controller에 들어옴? print bno:::" + bno);
 
-        BoardEntity boardEntity = boardEntityRepository.findById(bno).get();
+        Optional<BoardEntity>optionalBoardEntity = boardEntityRepository.findById(bno);
 
-        return boardEntity.toDto();
+        if(optionalBoardEntity.isPresent()){
+
+            BoardEntity boardentity = optionalBoardEntity.get();
+
+            List<ReplyDto>list = new ArrayList<>();
+
+            boardentity.getReplyEntityList().forEach((r)->{
+                list.add(r.toDto());
+            });
+           BoardDto boardDto  = boardentity.toDto();
+           boardDto.setReplyDtoList(list);
+           return boardDto;
+        }
+
+        return null;
+/*        BoardEntity boardEntity = boardEntityRepository.findById(bno).get();
+
+        return boardEntity.toDto();*/
     }
 
     @Transactional
@@ -200,8 +222,201 @@ public class BoardService {
         return false ;
     }
 
-    //board 개별게시물 수정 [4/26 오후1:48 백한결]
 
+
+
+
+
+
+
+    //board 댓글 만들기 [2023-04-27 수업 쌤과]
+
+
+
+    //9.댓글작성
+
+    @Transactional
+    public boolean postReply( ReplyDto replyDto){
+        log.info("ReplyDto"+replyDto);
+
+        //로그인했는지
+        Object o= SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(o.equals("anonymousUser")){
+            return false;
+        }
+        MemberDto memberDto =(MemberDto)o;
+        MemberEntity memberEntity=memberEntityRepository.findById(memberDto.getMno() ).get();
+
+
+        //댓글 작섷할 게시물 호출
+        Optional <BoardEntity> optionalBoardEntity= boardEntityRepository.findById( replyDto.getBno() );
+        if(!optionalBoardEntity.isPresent()) {
+            return false;
+        }
+        BoardEntity boardEntity=optionalBoardEntity.get();
+
+
+        //댓글 작성한다
+        ReplyEntity replyEntity = replyEntityRepository.save(replyDto.toReplyEntity());
+
+        if(replyEntity.getRno()<1){
+            return false;
+        }
+
+        //댓글과 회원의 양방향관계
+        replyEntity.setMemberEntity(memberEntity);
+        memberEntity.getReplyEntityList().add(replyEntity);
+
+        replyEntity.setBoardEntity(boardEntity);
+        boardEntity.getReplyEntityList().add(replyEntity);
+
+        return true;
+    }
+
+    //댓글출력
+    @Transactional
+    public boolean getReply(){ //게시물 출력시로  대체함
+        return true;
+    }
+
+    //댓글수정
+    @Transactional
+    public boolean PutReply( ReplyDto replyDto , int rno){ //{rno: 수정할번호 rcontent:수정내용}
+        log.info("service rno"+rno);
+        log.info("PutReply"+replyDto);
+
+
+        Optional<ReplyEntity>optionalReplyEntity =
+                    replyEntityRepository.findById(rno);
+        if(optionalReplyEntity.isPresent()){
+            optionalReplyEntity.get().setRcontent(replyDto.getRcontent());
+            return true;
+        }
+        return false;
+    }
+
+
+    //댓글삭제
+    @Transactional
+    public boolean deleteReply( int rno){
+
+        Optional< ReplyEntity >optionalReplyEntity =
+                    replyEntityRepository.findById(rno);
+
+        if(optionalReplyEntity.isPresent()){
+            replyEntityRepository.delete(optionalReplyEntity.get());
+            return true;
+        }
+
+        return false;
+    }
+/*
+
+    //----------------------------대댓글과제 [2023-04-27]-----------------------------//
+
+
+    //9.대댓글작성
+    @Transactional
+    public boolean postRereply(RereplyDto rereplyDto){
+        log.info("reReplyDto"+rereplyDto);
+        log.info("ReplyDto"+rereplyDto);
+
+        //로그인했는지
+        Object o= SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(o.equals("anonymousUser")){
+            return false;
+        }
+
+        //형변환
+        MemberDto memberDto =(MemberDto)o;
+        MemberEntity memberEntity=memberEntityRepository.findById(memberDto.getMno() ).get();
+
+
+        //댓글 작섷할 게시판 호출
+        Optional <BoardEntity> optionalBoardEntity= boardEntityRepository.findById( rereplyDto.getBno() );
+        if(!optionalBoardEntity.isPresent()) {
+            return false;
+        }
+        BoardEntity boardEntity=optionalBoardEntity.get();
+
+
+        //댓글 작섷할 게시물 호출
+        Optional <ReplyEntity> optionalReplyEntity = replyEntityRepository.findById( rereplyDto.getRno() );
+
+        if(!optionalReplyEntity.isPresent()) {
+            return false;
+        }
+
+        ReplyEntity replyEntity = optionalReplyEntity.get();
+
+
+
+
+        //대댓글 작성한다
+        RereplyEntity rereplyEntity = rereplyEntityRepository.save(rereplyDto.toRereplyEntity());
+
+        if(rereplyEntity.getReno()<1){
+            return false;
+        }
+
+        //댓글과 회원의 양방향관계
+        replyEntity.setMemberEntity(memberEntity);
+        memberEntity.getReplyEntityList().add(replyEntity);
+
+        replyEntity.setBoardEntity(boardEntity);
+        boardEntity.getReplyEntityList().add(replyEntity);
+
+
+        rereplyEntity.setReplyEntity(replyEntity);
+        replyEntity.getRereplyEntityList().add(rereplyEntity);
+
+
+
+        return true;
+
+
+    }
+
+*/
+/*
+    //대댓글출력
+    @GetMapping("/rereply")
+    public boolean getReply(){
+        log.info("getReply");
+
+        return true;
+    }*//*
+
+
+    //대댓글수정
+    @Transactional
+    public boolean PutRereply( RereplyDto rereplyDto){
+        */
+/* @RequestBody RereplyDto rereplyDto, @RequestParam int rno *//*
+
+        //log.info("PutReply"+rereplyDto);
+        //log.info("PutReply"+rno);
+
+        //boolean result=  boardService.PutReply(replyDto, rno);
+        //log.info("reply controller 참거짓"+result);
+
+        return true;
+    }
+
+
+    //대댓글삭제
+    @Transactional
+    public boolean deleteRereply(){
+        log.info("deleteReply");
+        */
+/*@RequestParam int rno*//*
+
+        //boolean result=  boardService.deleteReply(rno);
+        return true;
+    }
+
+
+*/
 
 }
 

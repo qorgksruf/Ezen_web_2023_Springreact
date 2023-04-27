@@ -4,6 +4,8 @@ package ezenweb.web.domain.board;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -11,12 +13,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+
 public class BoardDto {
     private int bno;
     private String btitle;
     private String bcontent;
     private int cno;
     private String cname;
+
+
 
     //추가
     //작성자 회원정보
@@ -27,6 +32,10 @@ public class BoardDto {
     //조회수
     private int bview;
     //댓글목록
+    List<ReplyDto>replyDtoList = new ArrayList<>();
+
+    //대댓글목록
+
 
     //Entity   변환 메소드
     public CategoryEntity toCategoryEntity(){
@@ -42,7 +51,6 @@ public class BoardDto {
                 .bcontent(this.bcontent)
                 .build();
     }
-
 
 
 }

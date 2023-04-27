@@ -13,9 +13,9 @@ import javax.transaction.Transactional;
 
 @RestController
 @Slf4j
-@RequestMapping("/reply")
+//@RequestMapping("/reply")
 public class ReplyController {
-
+/*
     @Autowired
     private ReplyService replyService;
 
@@ -38,6 +38,6 @@ public class ReplyController {
         return false;
 
 
-    }
+    }*/
 
 }

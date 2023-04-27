@@ -12,5 +12,4 @@ import lombok.*;
 public class CategoryDto {
     private int cno;
     private String cname;
-
 }

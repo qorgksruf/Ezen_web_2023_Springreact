@@ -15,15 +15,18 @@ public class ReplyDto {
 
     private int rno;
     private String rcontent;
+    private String rdate;
+    private int rindex;
+
     private int bno;
     private int mno;
 
 
-    //엔티티화하기
+    //저장용
     public ReplyEntity toReplyEntity(){
         return ReplyEntity.builder()
-                .rno(this.rno)
                 .rcontent(this.rcontent)
+                .rindex(this.rindex)
                 .build();
     }
 

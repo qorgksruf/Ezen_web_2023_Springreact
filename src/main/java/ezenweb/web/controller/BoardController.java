@@ -1,8 +1,6 @@
 package ezenweb.web.controller;
 
-import ezenweb.web.domain.board.BoardDto;
-import ezenweb.web.domain.board.CategoryDto;
-import ezenweb.web.domain.board.PageDto;
+import ezenweb.web.domain.board.*;
 import ezenweb.web.service.BoardService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,5 +110,91 @@ public class BoardController {
 
         return result;
     }
+
+
+
+    //-------------------쌤이랑 함께한 부분[2023-04-27 백한결]----------------------//
+
+    //9.댓글작성
+    @PostMapping("/reply")
+    public boolean postReply(@RequestBody ReplyDto replyDto){
+        log.info("ReplyDto"+replyDto);
+
+       boolean result=  boardService.postReply(replyDto);
+       return result;
+    }
+
+    //댓글출력
+    @GetMapping("/reply")
+    public boolean getReply(){
+        log.info("getReply");
+
+        return true;
+    }
+
+    //댓글수정
+    @PutMapping("/reply")
+    public boolean PutReply(@RequestBody ReplyDto replyDto, @RequestParam int rno){
+        log.info("PutReply"+replyDto);
+        log.info("PutReply"+rno);
+
+
+        boolean result=  boardService.PutReply(replyDto, rno);
+        log.info("reply controller 참거짓"+result);
+
+        return result;
+    }
+
+    //댓글삭제
+    @DeleteMapping("/reply")
+    public boolean deleteReply(@RequestParam int rno){
+        log.info("deleteReply"+rno);
+
+        boolean result=  boardService.deleteReply(rno);
+        return result;
+    }
+
+
+
+    //---------------대댓글 과제 [2023-04-27 백한결]-----------------------------------//
+    //9.대댓글작성
+/*    @PostMapping("/rereply")
+    public boolean postRereply(@RequestBody RereplyDto rereplyDto){
+        log.info("reReplyDto"+rereplyDto);
+
+        //boolean result=  boardService.postReply(rereplyDto);
+        return true;
+    }
+*//*
+    //대댓글출력
+    @GetMapping("/rereply")
+    public boolean getReply(){
+        log.info("getReply");
+
+        return true;
+    }*//*
+
+    //대댓글수정
+    @PutMapping("/rereply")
+    public boolean PutRereply(@RequestBody RereplyDto rereplyDto){
+        *//* @RequestBody RereplyDto rereplyDto, @RequestParam int rno *//*
+        //log.info("PutReply"+rereplyDto);
+        //log.info("PutReply"+rno);
+
+        //boolean result=  boardService.PutReply(replyDto, rno);
+        //log.info("reply controller 참거짓"+result);
+
+        return true;
+    }
+
+
+    //대댓글삭제
+    @DeleteMapping("/rereply")
+    public boolean deleteRereply(){
+        log.info("deleteRereply");
+        *//*@RequestParam int rno*//*
+        //boolean result=  boardService.deleteReply(rno);
+        return true;
+    }*/
 
 }
