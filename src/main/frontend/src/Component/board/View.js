@@ -14,6 +14,9 @@ export default function View( props ){
         replyDtoList: []
     } );
 
+    const [showReplyInput, setshowReplyInput] = useState(false);
+
+
             /*{params: {bno:params.bno} }여기손보기*/
          const getBoard=()=>{
                 axios.get('/board/print', { params :{bno:params.bno} } )
@@ -89,30 +92,6 @@ export default function View( props ){
     }
 
 
-    //대댓글 [과제 2023-04-27]
-    const onReplyRegi = (rno)=>{
-        console.log("onReplyRegi함수실행");
-        console.log(rno)
-
-        let recontent = prompt('댓글 입력하세요');
-
-        let info={
-            recontent: recontent
-        }
-
-        console.log(recontent)
-
-            axios.post("/board/reply", info, {params: {"rno": rno} } )
-                .then(r=>{
-                    console.log(r.data)
-                    if(r.data == true){
-                        alert('대댓글작성완료')
-                    }else{
-                        alert('대댓글작성실패')
-                    }
-                })
-
-    }
 
 
     const [ login,setLogin ] = useState(JSON.parse(sessionStorage.getItem('login_token')));
@@ -136,6 +115,36 @@ export default function View( props ){
                         alert("로그인후 가능");
                     }
             });
+
+    }
+
+
+    //대댓글 [과제 2023-04-28]
+    const onReplyRegi = (rno)=>{
+        console.log("onReplyRegi함수실행");
+        console.log(rno)
+
+        let rcontent = prompt('댓글 입력하세요');
+
+
+        let info={
+            rcontent: rcontent,
+            rindex : rno,
+            bno: board.bno
+        }
+
+        console.log(info)
+
+            axios.post("/board/reply", info )
+                .then(r=>{
+                    console.log(r);
+                    if(r.data == true){
+                        alert('대댓글작성완료')
+                        getBoard();
+                    }else{
+                        alert('대댓글작성실패')
+                    }
+                })
 
     }
 

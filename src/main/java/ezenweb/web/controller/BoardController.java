@@ -118,6 +118,7 @@ public class BoardController {
     //9.댓글작성
     @PostMapping("/reply")
     public boolean postReply(@RequestBody ReplyDto replyDto){
+
         log.info("ReplyDto"+replyDto);
 
        boolean result=  boardService.postReply(replyDto);
@@ -157,6 +158,8 @@ public class BoardController {
 
 
     //---------------대댓글 과제 [2023-04-27 백한결]-----------------------------------//
+
+
     //9.대댓글작성
 /*    @PostMapping("/rereply")
     public boolean postRereply(@RequestBody RereplyDto rereplyDto){
