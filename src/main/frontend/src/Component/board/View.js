@@ -3,7 +3,7 @@ import axios from 'axios';
 import {useParams}from 'react-router-dom';  //http경로상의 매개변수 호출 해주는 함수
 
 import ReplyList from './ReplyList'
-
+import Container from '@mui/material/Container';
 
 export default function View( props ){
     const params = useParams(); //useParams()훅: 경로[URL]상의 매개변수 반환
@@ -57,6 +57,7 @@ export default function View( props ){
     //댓글 삭제 렌더링
     const onReplyDelete=(rno)=>{
         console.log(rno);
+
              axios.delete("/board/reply", {params: {"rno":rno } })
                      .then(r=>{
                          if(r.data == true){
@@ -160,6 +161,7 @@ export default function View( props ){
 
 
     return(<>
+        <Container>
         <div>
             <h3> {board.btitle} </h3>
             <h3> {board.bcontent}  </h3>
@@ -172,6 +174,7 @@ export default function View( props ){
                 onReplyRegi = { onReplyRegi }
                 replyList={board.replyDtoList}
              />
+        </Container>
       </>)
 
 

@@ -1,10 +1,15 @@
 import React , { useState , useEffect } from 'react';
 import axios from 'axios';
+import styles from '../../css/board/board.css';
 //import { useSearchParams }from 'react-router-dom';
 
+
 export default function ReplyList(props){
+    //로그인정보
+
+
         //상위 view에게 받은 댓글 리스트
-       const [replyDtoList,setReplyDtoList] = useState()
+       const [replyDtoList,setReplyDtoList] = useState();
        console.log("replyDtoList확인")
        console.log(replyDtoList)
 
@@ -28,6 +33,7 @@ export default function ReplyList(props){
     const onUpdateHandler = (e,rno)=>{
         console.log('수정'+rno);
         props.onReplyUpdate(rno); //props로 전달받은 수정함수 실행하기
+
     }
 
     //대댓글작성 헨들러
@@ -47,7 +53,8 @@ export default function ReplyList(props){
 
     return(<>
       <input className="rcontent" type="text"/>
-      <button onClick={onWriteHandler}> 댓글작성 </button>
+      <button className="button" onClick={onWriteHandler}> 댓글작성 </button>
+
             <h3> 댓글목록 </h3>
         {
             props.replyList.map( (r) => {
@@ -63,9 +70,9 @@ export default function ReplyList(props){
                                      <마크업 이벤트 = { (e) => { 함수명(e , 매개변수) } } />
                                  */
                              }
-                             <button onClick={ (e) => onDeleteHandler( e, r.rno) }> 삭제 </button>
-                             <button onClick={ (e) => onUpdateHandler( e, r.rno) }> 수정 </button>
-                             <button onClick= {(e)=> onDisplayHandler(e,r.rno) } > + </button>
+                             <button className="button" onClick={ (e) => onDeleteHandler( e, r.rno ) }> 삭제 </button>
+                             <button className="button" onClick={ (e) => onUpdateHandler( e, r.rno) }> 수정 </button>
+                             <button className="button" onClick= {(e)=> onDisplayHandler(e,r.rno) } > + </button>
                         </div>
 
                         <div className={ "rere"+r.rno } style={{display:"none"}}>
@@ -77,13 +84,14 @@ export default function ReplyList(props){
                                               <div>
                                                 <span> { t.rcontent } </span>
                                                 <span> { t.rdate } </span>
-                                                <button onClick={ (e) => onDeleteHandler( e, t.rno) }> 삭제 </button>
+                                                  <button  className="rebutton" onClick={ (e) => onDeleteHandler( e, t.rno) }> 삭제 </button>
+                                                  <button  className="rebutton" onClick={ (e) => onUpdateHandler( e, t.rno) }> 수정 </button>
                                               </div>
                                              </>)
                                     }
                                 } )
                         }
-                             <button onClick={ (e) => onReplyHandler( e, r.rno) }> 대댓글쓰기 </button>
+                             <button className="button" onClick={ (e) => onReplyHandler( e, r.rno) }> 대댓글쓰기 </button>
 
                         </div>
                     </>);

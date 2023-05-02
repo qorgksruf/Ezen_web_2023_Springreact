@@ -151,6 +151,7 @@ public class BoardController {
     public boolean deleteReply(@RequestParam int rno){
         log.info("deleteReply"+rno);
 
+
         boolean result=  boardService.deleteReply(rno);
         return result;
     }

@@ -10,13 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.awt.print.Pageable;
 import java.util.*;
 
 
@@ -298,13 +294,15 @@ public class BoardService {
 
     //댓글삭제
     @Transactional
-    public boolean deleteReply( int rno){
+    public boolean deleteReply(int rno){
 
         Optional< ReplyEntity >optionalReplyEntity =
                     replyEntityRepository.findById(rno);
+               // log.info("service의 rindex"+rindex);
 
         if(optionalReplyEntity.isPresent()){
-            replyEntityRepository.delete(optionalReplyEntity.get());
+                replyEntityRepository.delete(optionalReplyEntity.get());
+
             return true;
         }
 
