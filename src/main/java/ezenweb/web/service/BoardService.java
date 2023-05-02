@@ -300,8 +300,17 @@ public class BoardService {
                     replyEntityRepository.findById(rno);
                // log.info("service의 rindex"+rindex);
 
+
         if(optionalReplyEntity.isPresent()){
+
                 replyEntityRepository.delete(optionalReplyEntity.get());
+
+                List<ReplyEntity>replyEntities = replyEntityRepository.findByrindex(rno);
+
+
+            replyEntities.forEach((r)->{
+                replyEntityRepository.delete(optionalReplyEntity.get());
+            });
 
             return true;
         }
