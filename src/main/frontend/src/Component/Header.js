@@ -40,6 +40,7 @@ const logOut=()=>{
                 <a href="/board/list"> 게시판 </a>
                 <a href="/admin/dashboard"> 관리자 </a>
                 <a href="/todo"> Doto </a>
+                <a href="/chatting/home"> 익명채팅방 </a>
                 { login == null
                     ? ( <>
                         <a href="/member/login"> 로그인 </a>

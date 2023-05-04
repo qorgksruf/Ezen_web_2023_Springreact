@@ -14,6 +14,7 @@ import View from "./board/View"
 import Update from "./board/update"
 import DashBoard from "./admin/DashBoard"
 import AppTodo from "../example/exbook/AppTodo"
+import Chatting from './board/Chatting';
 /*
 
     react-router-dom 다양한 라우터 컴포넌트 제공
@@ -44,6 +45,8 @@ export default function Index( props ) {
                 <Route path="/board/write" element = { <Write/> } />
                 <Route path="/board/view/:bno" element = { <View/> } />
                 <Route path="/board/update" element = { <Update/> } />
+
+                 <Route path="/chatting/home" element={ <Chatting /> } />
 
                 <Route path="/todo" element = { <AppTodo/> } />
             </Routes>

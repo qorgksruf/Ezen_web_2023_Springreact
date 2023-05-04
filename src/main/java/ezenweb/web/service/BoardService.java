@@ -308,9 +308,9 @@ public class BoardService {
                 List<ReplyEntity>replyEntities = replyEntityRepository.findByrindex(rno);
 
 
-            replyEntities.forEach((r)->{
-                replyEntityRepository.delete(optionalReplyEntity.get());
-            });
+                    replyEntities.forEach((r)->{
+                        replyEntityRepository.delete(r);
+                    });
 
             return true;
         }
