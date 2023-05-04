@@ -12,6 +12,8 @@ export default function Chatting( props ) {
     let msgInput = useRef(null);    //채팅입력창 DOM 객체 제어 변수
     let fileForm = useRef(null);    //패팅입력창 INPUT DOM 객체 제어 변수
     let fileInput=useRef(null);
+    let chatContentBox = useRef(null);
+
 
     console.log( msgContent );
 
@@ -75,10 +77,8 @@ export default function Chatting( props ) {
         }
         //첨부파일 전송[ axios 이용한 서버에게 첨부파일 업로드]
         if(fileInput.current.value != ''){ //첨부파일이 존재하면
-            axios.post("/chat/fileupload", new FormData(fileForm.current) )
-                    .then( r => {
-                            console.log(r.data);
-                    });
+            let formData = new FormData(fileForm.current);
+            fileAxios( formData ) //파일전송
         }
 
     }
@@ -89,18 +89,79 @@ export default function Chatting( props ) {
     },[msgContent])
 
 
+    //6.파일 전송 axios
+    const fileAxios = (formData)=>{
+                    axios.post("/chat/fileupload" ,formData)
+                            .then( r => {
+                                    console.log(r.data);
+                                    // 다른 소켓들에게 업로드 결과 전달
+                                            let msgBox = {
+                                                id : id,                            // 보낸사람
+                                                msg : msgInput.current.value,       // 보낸 내용
+                                                type:'file',
+                                                fileInfo: r.data                    //업로드 후 응답받은 파일 정보
+                                            }
+                                     ws.current.send(JSON.stringify(msgBox));
+                                     fileInput.current.value ='';
+                            });
+    }
+
+
+
     return (<>
         <Container className="Container">
-            <div className="chatContentBox">
+            <div
+                className="chatContentBox"
+                onDragEnter={ (e)=>{
+                    console.log('onDragEnter');
+                    e.preventDefault();
+                } }
+                onDragOver = { (e)=>{
+                     console.log('onDragOver');
+                     e.preventDefault();
+                     e.target.style.backgroundColor = '#e8e8e8';
+
+                } }
+
+                onDragLeave = { (e)=>{
+                      console.log('onDragLeave');
+                      e.preventDefault();
+                      e.target.style.backgroundColor = '#ffffff';
+                } }
+                onDrop = {(e)=>{
+                      console.log('onDrop');
+                      e.preventDefault();
+                      {/* 드랍된 파일 호출= e.dataTransfer.files */}
+                      let files = e.dataTransfer.files;
+                      for(let i =0; i<files.length; i++){
+                            if(files[i] != null && files[i] !=undefined){ {/*파일이 존재하면*/}
+
+                                let formData= new FormData(fileForm.current)
+
+                                formData.set( 'attachFile',files[i] )
+                                fileAxios(formData)
+                            }
+                      }
+                }}
+
+            >
             {
                 msgContent.map( (m) => {
                     return (<>
-
-
                         <div className="chatContent" style={ m.id == id ? { backgroundColor: '#e4ebea' , textAlign : 'right' } : { } }>
                             <span> { m.id } </span>
-                            <span> { m.msg } </span>
                             <span> { m.time } </span>
+                            {
+                                m.type == 'msg' ?
+                                <span> {m.msg} </span>
+                                : (<>
+                                        <span>
+                                            <span> {m.fileInfo.originalFilename} </span>
+                                            <span> {m.fileInfo.sizekb} </span>
+                                            <span> <a href ={"/chat/filedownload?uuidFile="+m.fileInfo.uuidFile} >저장 </a>  </span>
+                                        </span>
+                                  </>)
+                            }
                         </div>
                     </>)
                 })
