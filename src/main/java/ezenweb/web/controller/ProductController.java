@@ -22,7 +22,7 @@ public class ProductController { /*리액트와 통신 역활[매핑]*/
     }
 
     @PostMapping("")
-    public boolean post(@RequestBody ProductDto productDto){
+    public boolean post(ProductDto productDto){
         return productService.post(productDto);
     }
 
@@ -36,3 +36,22 @@ public class ProductController { /*리액트와 통신 역활[매핑]*/
         return productService.delete(id);
     }
 }
+/*
+    객체 전송 [post, put]
+        axios.post('url',object)
+            ---->@RequestBody
+
+    폼 전송 [post 필수]
+        axios.post('url',object)
+
+
+    쿼리스트링 전송 [get,post,put, delete]
+        axios.post('url',{params:{필드명:데이터 }})
+        axios.post('url',{params:object })
+
+    매개변수 전송[get,post,put,delete]
+        axios.post('url/데이터1/데이터'
+
+*   axios
+*
+* */

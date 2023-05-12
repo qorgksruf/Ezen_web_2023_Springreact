@@ -72,7 +72,7 @@ export default function ReplyList(props){
                              }
                              <button className="button" onClick={ (e) => onDeleteHandler( e, r.rno ) }> 삭제 </button>
                              <button className="button" onClick={ (e) => onUpdateHandler( e, r.rno) }> 수정 </button>
-                             <button className="button" onClick= {(e)=> onDisplayHandler(e,r.rno) } > + </button>
+                             <button className="button" onClick={ (e) => onDisplayHandler(e,r.rno) } > + </button>
                         </div>
 
                         <div className={ "rere"+r.rno } style={{display:"none"}}>

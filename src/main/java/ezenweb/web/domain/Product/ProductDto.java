@@ -5,11 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.List;
 
 @Data
 @Builder
@@ -29,6 +31,8 @@ public class ProductDto {
      //관리자용
      private String cdate;
      private String udate;
+     //첨부파일 입력용
+     private List<MultipartFile> pimgs;
 
 
      //저장용[관리자 페이지]

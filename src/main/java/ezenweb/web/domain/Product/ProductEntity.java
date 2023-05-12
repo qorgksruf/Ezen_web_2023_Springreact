@@ -2,16 +2,14 @@ package ezenweb.web.domain.Product;
 
 
 import ezenweb.web.domain.BaesTime;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Data
@@ -30,7 +28,11 @@ public class ProductEntity extends BaesTime {
     @ColumnDefault("0")@Column(nullable = false) private int pstock; //제품 재고/수량
     //제품이미지[1:다] 연관관계 [*추후]
     //구매내역[1:다] 연관관게 [*추후]
-
+    //pk필드 선언시 mappedBy="참조할필드명" //제약조건: pk객체가 삭제되면 fk객체의 제약조건
+    @OneToMany(mappedBy = "productEntity", cascade = CascadeType.REMOVE)
+    @ToString.Exclude @Builder.Default
+    private List<ProductImgEntity>productImgEntityList = new ArrayList<>();
+    //구매내역[1:다] 연관관계 [*추후]
 
     //1.출력용 [관리자 페이지에서] 여긴 모든 제품정보 뿌릴 포장지
     public ProductDto toAdminDto(){
