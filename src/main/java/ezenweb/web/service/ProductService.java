@@ -26,7 +26,17 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     @Autowired private ProductEntityRepository productEntityRepository;
-    //1.
+    //1. [main 출력용] 현재 판매중인 제품 호출
+    @Transactional public  List<ProductDto>mainGet(){
+        List<ProductEntity>productEntityList = productEntityRepository.findAllState();
+        List<ProductDto>productDtoList = productEntityList.stream().map(
+            o -> o.toMinDto()
+        ).collect(Collectors.toList());
+        return productDtoList;
+    }
+
+
+    //1. [admin 출력용] 모든 제품 호출
     @Transactional
     public List<ProductDto> get(){
         log.info("get");

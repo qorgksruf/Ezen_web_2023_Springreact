@@ -1,5 +1,6 @@
 package ezenweb.web.domain.Product;
 
+import ezenweb.web.domain.File.FileDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -33,7 +35,7 @@ public class ProductDto {
      private String udate;
      //첨부파일 입력용
      private List<MultipartFile> pimgs;
-
+     private List<FileDto> files = new ArrayList<>();
 
      //저장용[관리자 페이지]
      public ProductEntity toSaveEntity(){

@@ -21,6 +21,11 @@ public class ProductController { /*리액트와 통신 역활[매핑]*/
         return productService.get();
     }
 
+    @GetMapping("/main")
+    public List<ProductDto> mainGet(){
+        return productService.mainGet();
+    }
+
     @PostMapping("")
     public boolean post(ProductDto productDto){
         return productService.post(productDto);
